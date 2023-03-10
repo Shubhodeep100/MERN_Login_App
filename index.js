@@ -2,16 +2,11 @@ const express = require("express");
 require("dotenv").config();
 const dotenv = require("dotenv")
 const path = require("path")
-const connect = require('./configs/db.js')
-// import { dirname } from 'path'
-// import { fileURLToPath } from 'url'
 const mongoose = require("mongoose");
 const cors = require("cors")
 
 mongoose.set('strictQuery', false)
 const PORT = process.env.port || 9002
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename)
 
 const app = express()
 app.use(express.json())
@@ -28,28 +23,18 @@ app.get("*", function (_, res) {
   );
 })
 
-// mongoose.connect(
-//   PORT,
-//   {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   },
-//   () => {
-//    app.listen(PORT, () => {
-//     console.log(`BE start at ${PORT}`)
-//    });
-//    console.log("DB is connected")
-//   }
-// );
 
- app.listen(PORT, async () => {
-   try {
-     await connect();
-     console.log(`Listening at ${PORT}`);
-   } catch (error) {
-     console.log(error.message);
-   }
- });
+// To establish MongoDB Connection
+
+const connect = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
 
 
 const userSchema = new mongoose.Schema({
@@ -99,5 +84,14 @@ app.post("/register", (req,res) => {
 
 }) 
 
+
+ app.listen(PORT, async () => {
+   try {
+     await connect();
+     console.log(`Listening at ${PORT}`);
+   } catch (error) {
+     console.log(error.message);
+   }
+ });
 
 
