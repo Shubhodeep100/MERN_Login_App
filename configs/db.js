@@ -1,6 +1,6 @@
-const mongoose = import("mongoose");
-import("dotenv").config();
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-export default connect = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+module.exports = connect = async () => {
+  await mongoose.connect(process.env.MONGO_URL);
 };

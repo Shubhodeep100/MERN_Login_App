@@ -1,22 +1,24 @@
-import express from "express"
-import mongoose from "mongoose"
-import dotenv from "dotenv";
-dotenv.config();
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
-import cors from "cors"
+const express = require("express");
+require("dotenv").config();
+const dotenv = require("dotenv")
+const path = require("path")
+const connect = require('./configs/db.js')
+// import { dirname } from 'path'
+// import { fileURLToPath } from 'url'
+const mongoose = require("mongoose");
+const cors = require("cors")
 
-const PORT = process.env.PORT || 9002
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename)
-import path from 'path'
+mongoose.set('strictQuery', false)
+const PORT = process.env.port || 9002
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename)
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors())
 
-
+// To serve the Frontend:
 app.use(express.static(path.join(__dirname, "./login-and-register-app/build")));
 app.get("*", function (_, res) {
   res.sendFile(path.join(__dirname, "./login-and-register-app/build/index.html"),
@@ -26,20 +28,29 @@ app.get("*", function (_, res) {
   );
 })
 
-mongoose.set('strictQuery', false)
-mongoose.connect(
-  process.env.MONGO_URL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  () => {
-    app.listen(PORT, () => {
-        console.log(`Listening at ${PORT}`);
-      });
-        console.log("DB is connected");
-      }
-);
+// mongoose.connect(
+//   PORT,
+//   {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   },
+//   () => {
+//    app.listen(PORT, () => {
+//     console.log(`BE start at ${PORT}`)
+//    });
+//    console.log("DB is connected")
+//   }
+// );
+
+ app.listen(PORT, async () => {
+   try {
+     await connect();
+     console.log(`Listening at ${PORT}`);
+   } catch (error) {
+     console.log(error.message);
+   }
+ });
+
 
 const userSchema = new mongoose.Schema({
     name : String,
