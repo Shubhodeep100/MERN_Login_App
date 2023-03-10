@@ -1,10 +1,11 @@
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 import express from "express"
-import cors from "cors"
 import mongoose from "mongoose"
 import dotenv from "dotenv";
 dotenv.config();
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import cors from "cors"
+
 const PORT = process.env.PORT || 9002
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
@@ -33,11 +34,11 @@ mongoose.connect(
     useUnifiedTopology: true,
   },
   () => {
-    app.listen(9002, () => {
-      console.log("BE started at port 9002");
-    });
-    console.log("DB is Connected");
-  }
+    app.listen(PORT, () => {
+        console.log(`Listening at ${PORT}`);
+      });
+        console.log("DB is connected");
+      }
 );
 
 const userSchema = new mongoose.Schema({
