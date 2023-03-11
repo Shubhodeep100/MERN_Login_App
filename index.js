@@ -5,7 +5,6 @@ const path = require("path")
 const mongoose = require("mongoose");
 const cors = require("cors")
 
-mongoose.set('strictQuery', false)
 const PORT = process.env.port || 9002
 
 const app = express()
@@ -26,6 +25,7 @@ app.get("*", function (_, res) {
 
 // To establish MongoDB Connection
 
+mongoose.set('strictQuery', false)
 const connect = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URL);
